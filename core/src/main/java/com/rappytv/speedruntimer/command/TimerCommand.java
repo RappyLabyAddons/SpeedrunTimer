@@ -6,6 +6,8 @@ import com.rappytv.speedruntimer.util.Timer.TimerState;
 import net.labymod.api.Laby;
 import net.labymod.api.client.chat.command.Command;
 import net.labymod.api.client.chat.command.SubCommand;
+import net.labymod.api.client.component.Component;
+import net.labymod.api.client.component.format.NamedTextColor;
 
 public class TimerCommand extends Command {
 
@@ -24,6 +26,18 @@ public class TimerCommand extends Command {
 
     @Override
     public boolean execute(String prefix, String[] arguments) {
+        displayMessage(
+            Component.empty()
+                .append(SpeedrunTimerAddon.prefix())
+                .append(Component.translatable(
+                    "speedruntimer.command.usage",
+                    NamedTextColor.RED,
+                    Component.text(
+                        prefix + " <start/pause/resume/time/reset>",
+                        NamedTextColor.AQUA
+                    )
+                ))
+        );
         return true;
     }
 
@@ -43,7 +57,7 @@ public class TimerCommand extends Command {
                 return true;
             }
             if(addon.getTimer().getState() == TimerState.PAUSED) {
-                Laby.references().chatExecutor().chat("/timer resume");
+                Laby.references().chatExecutor().chat("/timer resume", false);
                 return true;
             }
             if(arguments.length > 0 && arguments[0].equalsIgnoreCase("down")) {
