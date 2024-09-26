@@ -3,6 +3,39 @@
         "settings": {
             "enabled": {
                 "name": "Enabled"
+            },
+            "countdownSound": {
+                "name": "Play sound after countdown",
+                "description": "If this option is enabled a sound will be played as soon as a countdown reaches 0."
+            }
+        },
+        "hudWidget": {
+            "speedruntimer_display": {
+                "name": "Timer Display"
+            }
+        },
+        "command": {
+            "usage": "Usage: %s",
+            "enterTimeValue": "Please enter a positive time value with one of these units: s, m, h, d, w, y",
+            "noTimerRunning": "There is currently no timer running! You can start a timer with %s.",
+            "start": {
+                "alreadyRunning": "The timer is already running! You can reset the timer with %s.",
+                "success": "The timer was started."
+            },
+            "pause": {
+                "alreadyPaused": "The timer is already paused! You can resume the timer with %s.",
+                "success": "The timer was paused."
+            },
+            "resume": {
+                "notPaused": "The timer is not paused! You can pause the timer with %s.",
+                "endedCountdown": "You can't resume an ended countdown! You can reset the timer with %s.",
+                "success": "The timer was resumed."
+            },
+            "time": {
+                "success": "The time was set to %s."
+            },
+            "reset": {
+                "success": "The timer was reset."
             }
         }
     }
