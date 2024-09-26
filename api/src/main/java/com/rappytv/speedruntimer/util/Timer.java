@@ -4,14 +4,20 @@ import net.labymod.api.client.component.Component;
 import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.client.component.format.TextDecoration;
 import java.util.TimerTask;
+import java.util.function.Supplier;
 
 public class Timer {
 
     private static final String displayFormat = "%s:%s:%s";
-    private final java.util.Timer timer = new java.util.Timer();
+    private static final java.util.Timer timer = new java.util.Timer();
+    private final Runnable onCountdownComplete;
     private TimerState state = TimerState.OFF;
     private TimerDirection direction = TimerDirection.COUNT_DOWN;
     private long seconds = 0;
+
+    public Timer(Runnable onCountdownComplete) {
+        this.onCountdownComplete = onCountdownComplete;
+    }
 
     public void startCountUp() {
         if(state != TimerState.OFF) return;
@@ -65,6 +71,7 @@ public class Timer {
                     if(seconds < 0) {
                         seconds = 0;
                         state = TimerState.PAUSED;
+                        onCountdownComplete.run();
                     }
                 }
             }

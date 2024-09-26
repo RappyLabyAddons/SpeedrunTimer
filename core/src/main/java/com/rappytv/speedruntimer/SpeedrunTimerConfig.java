@@ -9,8 +9,15 @@ public class SpeedrunTimerConfig extends AddonConfig {
     @SwitchSetting
     private final ConfigProperty<Boolean> enabled = new ConfigProperty<>(true);
 
+    @SwitchSetting
+    private final ConfigProperty<Boolean> countdownSound = new ConfigProperty<>(true);
+
     @Override
     public ConfigProperty<Boolean> enabled() {
         return enabled;
+    }
+
+    public ConfigProperty<Boolean> countdownSound() {
+        return countdownSound;
     }
 }
