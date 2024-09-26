@@ -14,18 +14,19 @@ import net.labymod.api.client.render.matrix.Stack;
 public class TimerHudWidget extends SimpleHudWidget<HudWidgetConfig> {
 
     private final SpeedrunTimerAddon addon;
+    private final ComponentRenderer renderer;
 
     public TimerHudWidget(SpeedrunTimerAddon addon) {
         super("speedruntimer_display", HudWidgetConfig.class);
         this.addon = addon;
+        this.renderer = Laby.references().renderPipeline().componentRenderer();
     }
 
     @Override
     public void render(Stack stack, MutableMouse mouse, float partialTicks, boolean isEditorContext, HudSize size) {
-        ComponentRenderer componentRenderer = Laby.references().renderPipeline().componentRenderer();
         RenderableComponent statusComponent = RenderableComponent.of(addon.getTimer().getDisplay());
         if (stack != null) {
-            componentRenderer.builder().text(statusComponent).pos(this.anchor.isLeft() ? 2 : (this.anchor.isCenter() ? statusComponent.getWidth() / 2.0f : 2.0f), 0).color(-1).shadow(true).centered(this.anchor.isCenter()).render(stack);
+            renderer.builder().text(statusComponent).pos(this.anchor.isLeft() ? 2 : (this.anchor.isCenter() ? statusComponent.getWidth() / 2.0f : 2.0f), 0).color(-1).shadow(true).centered(this.anchor.isCenter()).render(stack);
         }
         size.set(statusComponent.getWidth(), statusComponent.getHeight());
     }
