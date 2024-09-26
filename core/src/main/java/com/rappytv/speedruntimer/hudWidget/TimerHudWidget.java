@@ -10,6 +10,7 @@ import net.labymod.api.client.gui.mouse.MutableMouse;
 import net.labymod.api.client.render.font.ComponentRenderer;
 import net.labymod.api.client.render.font.RenderableComponent;
 import net.labymod.api.client.render.matrix.Stack;
+import net.labymod.api.util.bounds.area.RectangleAreaPosition;
 
 public class TimerHudWidget extends SimpleHudWidget<HudWidgetConfig> {
 
@@ -20,6 +21,14 @@ public class TimerHudWidget extends SimpleHudWidget<HudWidgetConfig> {
         super("speedruntimer_display", HudWidgetConfig.class);
         this.addon = addon;
         this.renderer = Laby.references().renderPipeline().componentRenderer();
+    }
+
+    public void initializePreConfigured(HudWidgetConfig config) {
+        super.initializePreConfigured(config);
+        config.setEnabled(true);
+        config.setX(0.0f);
+        config.setY(-50.0f);
+        config.setAreaIdentifier(RectangleAreaPosition.BOTTOM_CENTER);
     }
 
     @Override
