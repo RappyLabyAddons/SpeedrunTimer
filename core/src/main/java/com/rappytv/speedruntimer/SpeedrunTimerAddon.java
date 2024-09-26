@@ -19,9 +19,9 @@ import org.jetbrains.annotations.NotNull;
 public class SpeedrunTimerAddon extends LabyAddon<SpeedrunTimerConfig> {
 
     private static final Component prefix = Component.empty()
-        .append(Component.text("[", NamedTextColor.GRAY))
+        .append(Component.text("[", NamedTextColor.DARK_GRAY))
         .append(Component.text("Timer", NamedTextColor.GOLD).decorate(TextDecoration.BOLD))
-        .append(Component.text("]", NamedTextColor.GRAY))
+        .append(Component.text("]", NamedTextColor.DARK_GRAY))
         .append(Component.space());
 
     private Timer timer;
