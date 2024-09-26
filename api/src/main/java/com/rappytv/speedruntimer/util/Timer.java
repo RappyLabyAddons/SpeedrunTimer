@@ -4,7 +4,6 @@ import net.labymod.api.client.component.Component;
 import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.client.component.format.TextDecoration;
 import java.util.TimerTask;
-import java.util.function.Supplier;
 
 public class Timer {
 
