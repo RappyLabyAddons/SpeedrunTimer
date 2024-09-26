@@ -81,7 +81,11 @@ public class Timer {
         String format = timeValue.substring(timeValue.length() - 1);
         long duration;
         try {
-            duration = Integer.parseInt(timeValue.substring(0, timeValue.length() - 1));
+            duration = Integer.parseInt(
+                timeValue.length() > 1
+                    ? timeValue.substring(0, timeValue.length() - 1)
+                    : timeValue
+            );
         } catch(NumberFormatException e) {
             return -1;
         }
