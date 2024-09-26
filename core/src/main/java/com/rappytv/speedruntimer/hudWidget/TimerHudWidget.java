@@ -6,10 +6,12 @@ import net.labymod.api.Laby;
 import net.labymod.api.client.gui.hud.hudwidget.HudWidgetConfig;
 import net.labymod.api.client.gui.hud.hudwidget.SimpleHudWidget;
 import net.labymod.api.client.gui.hud.position.HudSize;
+import net.labymod.api.client.gui.icon.Icon;
 import net.labymod.api.client.gui.mouse.MutableMouse;
 import net.labymod.api.client.render.font.ComponentRenderer;
 import net.labymod.api.client.render.font.RenderableComponent;
 import net.labymod.api.client.render.matrix.Stack;
+import net.labymod.api.client.resources.ResourceLocation;
 import net.labymod.api.util.bounds.area.RectangleAreaPosition;
 
 public class TimerHudWidget extends SimpleHudWidget<HudWidgetConfig> {
@@ -21,6 +23,11 @@ public class TimerHudWidget extends SimpleHudWidget<HudWidgetConfig> {
         super("speedruntimer_display", HudWidgetConfig.class);
         this.addon = addon;
         this.renderer = Laby.references().renderPipeline().componentRenderer();
+
+        setIcon(Icon.texture(ResourceLocation.create(
+            "speedruntimer",
+            "textures/timer.png"
+        )));
     }
 
     public void initializePreConfigured(HudWidgetConfig config) {
