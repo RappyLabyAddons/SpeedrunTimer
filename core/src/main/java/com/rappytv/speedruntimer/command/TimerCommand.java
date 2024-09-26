@@ -11,13 +11,11 @@ import net.labymod.api.client.component.format.NamedTextColor;
 
 public class TimerCommand extends Command {
 
-    private final SpeedrunTimerAddon addon;
-
     public TimerCommand(SpeedrunTimerAddon addon) {
         super("timer");
-        this.addon = addon;
 
         withSubCommand(new StartSubcommand(addon));
+        withSubCommand(new CountdownSubcommand(addon));
         withSubCommand(new PauseSubcommand(addon));
         withSubCommand(new ResumeSubcommand(addon));
         withSubCommand(new TimeSubcommand(addon));
@@ -33,7 +31,7 @@ public class TimerCommand extends Command {
                     "speedruntimer.command.usage",
                     NamedTextColor.RED,
                     Component.text(
-                        prefix + " <start/pause/resume/time/reset>",
+                        "/" + prefix + " <start/countdown/pause/resume/time/reset>",
                         NamedTextColor.AQUA
                     )
                 ))
@@ -53,29 +51,96 @@ public class TimerCommand extends Command {
         @Override
         public boolean execute(String prefix, String[] arguments) {
             if(addon.getTimer().getState() == TimerState.RUNNING) {
-                displayMessage("timer already running");
+                displayMessage(
+                    Component.empty()
+                        .append(SpeedrunTimerAddon.prefix())
+                        .append(Component.translatable(
+                            "speedruntimer.command.start.alreadyRunning",
+                            NamedTextColor.RED,
+                            Component.text("/timer reset", NamedTextColor.AQUA)
+                        ))
+                );
                 return true;
             }
             if(addon.getTimer().getState() == TimerState.PAUSED) {
                 Laby.references().chatExecutor().chat("/timer resume", false);
                 return true;
             }
-            if(arguments.length > 0 && arguments[0].equalsIgnoreCase("down")) {
-                if(arguments.length < 2) {
-                    displayMessage("enter number");
-                    return true;
-                }
-                long seconds = addon.getTimer().resolveSeconds(arguments[1]);
-                if(seconds < 0) {
-                    displayMessage("invalid number");
-                    return true;
-                }
+            addon.getTimer().startCountUp();
 
-                addon.getTimer().startCountDown(seconds);
-            } else {
-                addon.getTimer().startCountUp();
+            displayMessage(
+                Component.empty()
+                    .append(SpeedrunTimerAddon.prefix())
+                    .append(Component.translatable(
+                        "speedruntimer.command.start.success",
+                        NamedTextColor.GRAY
+                    ))
+            );
+            return true;
+        }
+    }
+
+    private static class CountdownSubcommand extends SubCommand {
+
+        private final SpeedrunTimerAddon addon;
+
+        protected CountdownSubcommand(SpeedrunTimerAddon addon) {
+            super("countdown", "down");
+            this.addon = addon;
+        }
+
+        @Override
+        public boolean execute(String prefix, String[] arguments) {
+            if(addon.getTimer().getState() == TimerState.RUNNING) {
+                displayMessage(
+                    Component.empty()
+                        .append(SpeedrunTimerAddon.prefix())
+                        .append(Component.translatable(
+                            "speedruntimer.command.start.alreadyRunning",
+                            NamedTextColor.RED,
+                            Component.text("/timer reset", NamedTextColor.AQUA)
+                        ))
+                );
+                return true;
             }
-            displayMessage("timer started");
+            if(addon.getTimer().getState() == TimerState.PAUSED) {
+                Laby.references().chatExecutor().chat("/timer resume", false);
+                return true;
+            }
+
+            if(arguments.length < 1) {
+                displayMessage(
+                    Component.empty()
+                        .append(SpeedrunTimerAddon.prefix())
+                        .append(Component.translatable(
+                            "speedruntimer.command.enterTimeValue",
+                            NamedTextColor.GRAY
+                        ))
+                );
+                return true;
+            }
+            long seconds = addon.getTimer().resolveSeconds(arguments[0]);
+            if(seconds < 0) {
+                displayMessage(
+                    Component.empty()
+                        .append(SpeedrunTimerAddon.prefix())
+                        .append(Component.translatable(
+                            "speedruntimer.command.enterTimeValue",
+                            NamedTextColor.RED
+                        ))
+                );
+                return true;
+            }
+
+            addon.getTimer().startCountDown(seconds);
+            displayMessage(
+                Component.empty()
+                    .append(SpeedrunTimerAddon.prefix())
+                    .append(Component.translatable(
+                        "speedruntimer.command.start.success",
+                        NamedTextColor.GRAY
+                    ))
+            );
             return true;
         }
     }
@@ -92,15 +157,38 @@ public class TimerCommand extends Command {
         @Override
         public boolean execute(String prefix, String[] arguments) {
             if(addon.getTimer().getState() == TimerState.OFF) {
-                displayMessage("no timer running");
+                displayMessage(
+                    Component.empty()
+                        .append(SpeedrunTimerAddon.prefix())
+                        .append(Component.translatable(
+                            "speedruntimer.command.noTimerRunning",
+                            NamedTextColor.RED,
+                            Component.text("/timer start", NamedTextColor.AQUA)
+                        ))
+                );
                 return true;
             }
             if(addon.getTimer().getState() == TimerState.PAUSED) {
-                displayMessage("timer already paused");
+                displayMessage(
+                    Component.empty()
+                        .append(SpeedrunTimerAddon.prefix())
+                        .append(Component.translatable(
+                            "speedruntimer.command.pause.alreadyPaused",
+                            NamedTextColor.RED,
+                            Component.text("/timer resume", NamedTextColor.AQUA)
+                        ))
+                );
                 return true;
             }
             addon.getTimer().setState(TimerState.PAUSED);
-            displayMessage("timer successfully paused");
+            displayMessage(
+                Component.empty()
+                    .append(SpeedrunTimerAddon.prefix())
+                    .append(Component.translatable(
+                        "speedruntimer.command.pause.success",
+                        NamedTextColor.GRAY
+                    ))
+            );
             return true;
         }
     }
@@ -116,16 +204,51 @@ public class TimerCommand extends Command {
 
         @Override
         public boolean execute(String prefix, String[] arguments) {
+            if(addon.getTimer().getState() == TimerState.OFF) {
+                displayMessage(
+                    Component.empty()
+                        .append(SpeedrunTimerAddon.prefix())
+                        .append(Component.translatable(
+                            "speedruntimer.command.noTimerRunning",
+                            NamedTextColor.RED,
+                            Component.text("/timer start", NamedTextColor.AQUA)
+                        ))
+                );
+                return true;
+            }
             if(addon.getTimer().getState() != TimerState.PAUSED) {
-                displayMessage("timer not paused");
+                displayMessage(
+                    Component.empty()
+                        .append(SpeedrunTimerAddon.prefix())
+                        .append(Component.translatable(
+                            "speedruntimer.command.resume.notPaused",
+                            NamedTextColor.RED,
+                            Component.text("/timer pause", NamedTextColor.AQUA)
+                        ))
+                );
                 return true;
             }
             if(addon.getTimer().getDirection() == TimerDirection.COUNT_DOWN && addon.getTimer().getSeconds() == 0) {
-                displayMessage("can't resume ended countdown");
+                displayMessage(
+                    Component.empty()
+                        .append(SpeedrunTimerAddon.prefix())
+                        .append(Component.translatable(
+                            "speedruntimer.command.resume.endedCountdown",
+                            NamedTextColor.RED,
+                            Component.text("/timer reset", NamedTextColor.AQUA)
+                        ))
+                );
                 return true;
             }
             addon.getTimer().setState(TimerState.RUNNING);
-            displayMessage("timer resumed");
+            displayMessage(
+                Component.empty()
+                    .append(SpeedrunTimerAddon.prefix())
+                    .append(Component.translatable(
+                        "speedruntimer.command.resume.success",
+                        NamedTextColor.GRAY
+                    ))
+            );
             return true;
         }
     }
@@ -142,17 +265,51 @@ public class TimerCommand extends Command {
         @Override
         public boolean execute(String prefix, String[] arguments) {
             if(addon.getTimer().getState() == TimerState.OFF) {
-                displayMessage("no timer running");
+                displayMessage(
+                    Component.empty()
+                        .append(SpeedrunTimerAddon.prefix())
+                        .append(Component.translatable(
+                            "speedruntimer.command.noTimerRunning",
+                            NamedTextColor.RED,
+                            Component.text("/timer start", NamedTextColor.AQUA)
+                        ))
+                );
+                return true;
+            }
+            if(arguments.length < 1) {
+                displayMessage(
+                    Component.empty()
+                        .append(SpeedrunTimerAddon.prefix())
+                        .append(Component.translatable(
+                            "speedruntimer.command.enterTimeValue",
+                            NamedTextColor.GRAY
+                        ))
+                );
                 return true;
             }
             long seconds = addon.getTimer().resolveSeconds(arguments[0]);
             if(seconds < 0) {
-                displayMessage("invalid number");
+                displayMessage(
+                    Component.empty()
+                        .append(SpeedrunTimerAddon.prefix())
+                        .append(Component.translatable(
+                            "speedruntimer.command.enterTimeValue",
+                            NamedTextColor.RED
+                        ))
+                );
                 return true;
             }
 
             addon.getTimer().setSeconds(seconds);
-            displayMessage("set time to " + seconds + " seconds");
+            displayMessage(
+                Component.empty()
+                    .append(SpeedrunTimerAddon.prefix())
+                    .append(Component.translatable(
+                        "speedruntimer.command.time.success",
+                        NamedTextColor.GRAY,
+                        Component.text(arguments[0], NamedTextColor.AQUA)
+                    ))
+            );
             return true;
         }
     }
@@ -169,11 +326,26 @@ public class TimerCommand extends Command {
         @Override
         public boolean execute(String prefix, String[] arguments) {
             if(addon.getTimer().getState() == TimerState.OFF) {
-                displayMessage("no timer running");
+                displayMessage(
+                    Component.empty()
+                        .append(SpeedrunTimerAddon.prefix())
+                        .append(Component.translatable(
+                            "speedruntimer.command.noTimerRunning",
+                            NamedTextColor.RED,
+                            Component.text("/timer start", NamedTextColor.AQUA)
+                        ))
+                );
                 return true;
             }
             addon.getTimer().reset();
-            displayMessage("successfully reset");
+            displayMessage(
+                Component.empty()
+                    .append(SpeedrunTimerAddon.prefix())
+                    .append(Component.translatable(
+                        "speedruntimer.command.reset.success",
+                        NamedTextColor.GRAY
+                    ))
+            );
             return true;
         }
     }
