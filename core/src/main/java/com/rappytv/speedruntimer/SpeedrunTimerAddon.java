@@ -8,12 +8,21 @@ import com.rappytv.speedruntimer.sound.ITimerSound;
 import com.rappytv.speedruntimer.util.Timer;
 import net.labymod.api.Laby;
 import net.labymod.api.addon.LabyAddon;
+import net.labymod.api.client.component.Component;
+import net.labymod.api.client.component.format.NamedTextColor;
+import net.labymod.api.client.component.format.TextDecoration;
 import net.labymod.api.client.resources.ResourceLocation;
 import net.labymod.api.models.addon.annotation.AddonMain;
 import org.jetbrains.annotations.NotNull;
 
 @AddonMain
 public class SpeedrunTimerAddon extends LabyAddon<SpeedrunTimerConfig> {
+
+    private static final Component prefix = Component.empty()
+        .append(Component.text("[", NamedTextColor.GRAY))
+        .append(Component.text("Timer", NamedTextColor.GOLD).decorate(TextDecoration.BOLD))
+        .append(Component.text("]", NamedTextColor.GRAY))
+        .append(Component.space());
 
     private Timer timer;
 
@@ -42,5 +51,9 @@ public class SpeedrunTimerAddon extends LabyAddon<SpeedrunTimerConfig> {
     @NotNull
     public Timer getTimer() {
         return timer;
+    }
+
+    public static Component prefix() {
+        return prefix;
     }
 }
