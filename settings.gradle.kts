@@ -1,4 +1,4 @@
-rootProject.name = "labymod4-addon-template"
+rootProject.name = "speedruntimer"
 
 pluginManagement {
     val labyGradlePluginVersion = "0.5.4"
