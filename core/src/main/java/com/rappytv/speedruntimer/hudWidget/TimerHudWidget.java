@@ -3,9 +3,13 @@ package com.rappytv.speedruntimer.hudWidget;
 import com.rappytv.speedruntimer.SpeedrunTimerAddon;
 import com.rappytv.speedruntimer.util.Timer.TimerState;
 import net.labymod.api.Laby;
+import net.labymod.api.client.gui.hud.HudWidgetRendererAccessor;
+import net.labymod.api.client.gui.hud.binding.dropzone.HudWidgetDropzone;
+import net.labymod.api.client.gui.hud.binding.dropzone.NamedHudWidgetDropzones;
 import net.labymod.api.client.gui.hud.hudwidget.HudWidgetConfig;
 import net.labymod.api.client.gui.hud.hudwidget.SimpleHudWidget;
 import net.labymod.api.client.gui.hud.position.HudSize;
+import net.labymod.api.client.gui.hud.position.HudWidgetAnchor;
 import net.labymod.api.client.gui.icon.Icon;
 import net.labymod.api.client.gui.screen.ScreenContext;
 import net.labymod.api.client.render.font.ComponentRenderer;
@@ -24,6 +28,7 @@ public class TimerHudWidget extends SimpleHudWidget<HudWidgetConfig> {
         this.addon = addon;
         this.renderer = Laby.references().renderPipeline().componentRenderer();
 
+        this.bindDropzones(new TimerHudWidgetDropzone());
         this.setIcon(Icon.texture(ResourceLocation.create(
             "speedruntimer",
             "textures/timer.png"
@@ -51,5 +56,32 @@ public class TimerHudWidget extends SimpleHudWidget<HudWidgetConfig> {
     @Override
     public boolean isVisibleInGame() {
         return this.addon.getTimer().getState() != TimerState.OFF;
+    }
+
+    public static class TimerHudWidgetDropzone extends HudWidgetDropzone {
+
+        public TimerHudWidgetDropzone() {
+            super("timer_display");
+        }
+
+        @Override
+        public float getX(HudWidgetRendererAccessor renderer, HudSize hudWidgetSize) {
+            return NamedHudWidgetDropzones.ACTION_BAR.getX(renderer, hudWidgetSize);
+        }
+
+        @Override
+        public float getY(HudWidgetRendererAccessor renderer, HudSize hudWidgetSize) {
+            return NamedHudWidgetDropzones.ACTION_BAR.getY(renderer, hudWidgetSize) - 15;
+        }
+
+        @Override
+        public HudWidgetDropzone copy() {
+            return new TimerHudWidgetDropzone();
+        }
+
+        @Override
+        public HudWidgetAnchor getAnchor() {
+            return HudWidgetAnchor.CENTER_BOTTOM;
+        }
     }
 }
