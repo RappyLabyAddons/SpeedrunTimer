@@ -10,6 +10,7 @@ version = providers.environmentVariable("VERSION").getOrElse("1.0.0")
 
 labyMod {
     defaultPackageName = "com.rappytv.speedruntimer"
+
     addonInfo {
         namespace = "speedruntimer"
         displayName = "SpeedrunTimer"
