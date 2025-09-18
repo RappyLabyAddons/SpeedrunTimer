@@ -24,7 +24,7 @@ public class TimerHudWidget extends SimpleHudWidget<HudWidgetConfig> {
         this.addon = addon;
         this.renderer = Laby.references().renderPipeline().componentRenderer();
 
-        setIcon(Icon.texture(ResourceLocation.create(
+        this.setIcon(Icon.texture(ResourceLocation.create(
             "speedruntimer",
             "textures/timer.png"
         )));
@@ -40,15 +40,15 @@ public class TimerHudWidget extends SimpleHudWidget<HudWidgetConfig> {
 
     @Override
     public void render(Stack stack, MutableMouse mouse, float partialTicks, boolean isEditorContext, HudSize size) {
-        RenderableComponent statusComponent = RenderableComponent.of(addon.getTimer().getDisplay());
+        RenderableComponent statusComponent = RenderableComponent.of(this.addon.getTimer().getDisplay());
         if (stack != null) {
-            renderer.builder().text(statusComponent).pos(this.anchor.isLeft() ? 2 : (this.anchor.isCenter() ? statusComponent.getWidth() / 2.0f : 2.0f), 0).color(-1).shadow(true).centered(this.anchor.isCenter()).render(stack);
+            this.renderer.builder().text(statusComponent).pos(this.anchor.isLeft() ? 2 : (this.anchor.isCenter() ? statusComponent.getWidth() / 2.0f : 2.0f), 0).color(-1).shadow(true).centered(this.anchor.isCenter()).render(stack);
         }
         size.set(statusComponent.getWidth(), statusComponent.getHeight());
     }
 
     @Override
     public boolean isVisibleInGame() {
-        return addon.getTimer().getState() != TimerState.OFF;
+        return this.addon.getTimer().getState() != TimerState.OFF;
     }
 }

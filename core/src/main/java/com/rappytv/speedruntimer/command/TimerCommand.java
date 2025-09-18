@@ -1,6 +1,7 @@
 package com.rappytv.speedruntimer.command;
 
 import com.rappytv.speedruntimer.SpeedrunTimerAddon;
+import com.rappytv.speedruntimer.util.Timer;
 import com.rappytv.speedruntimer.util.Timer.TimerDirection;
 import com.rappytv.speedruntimer.util.Timer.TimerState;
 import net.labymod.api.Laby;
@@ -13,18 +14,19 @@ public class TimerCommand extends Command {
 
     public TimerCommand(SpeedrunTimerAddon addon) {
         super("timer");
+        Timer timer = addon.getTimer();
 
-        withSubCommand(new StartSubcommand(addon));
-        withSubCommand(new CountdownSubcommand(addon));
-        withSubCommand(new PauseSubcommand(addon));
-        withSubCommand(new ResumeSubcommand(addon));
-        withSubCommand(new TimeSubcommand(addon));
-        withSubCommand(new ResetSubcommand(addon));
+        this.withSubCommand(new StartSubcommand(timer));
+        this.withSubCommand(new CountdownSubcommand(timer));
+        this.withSubCommand(new PauseSubcommand(timer));
+        this.withSubCommand(new ResumeSubcommand(timer));
+        this.withSubCommand(new TimeSubcommand(timer));
+        this.withSubCommand(new ResetSubcommand(timer));
     }
 
     @Override
     public boolean execute(String prefix, String[] arguments) {
-        displayMessage(
+        this.displayMessage(
             Component.empty()
                 .append(SpeedrunTimerAddon.prefix())
                 .append(Component.translatable(
@@ -41,17 +43,17 @@ public class TimerCommand extends Command {
 
     private static class StartSubcommand extends SubCommand {
 
-        private final SpeedrunTimerAddon addon;
+        private final Timer timer;
 
-        protected StartSubcommand(SpeedrunTimerAddon addon) {
+        protected StartSubcommand(Timer timer) {
             super("start");
-            this.addon = addon;
+            this.timer = timer;
         }
 
         @Override
         public boolean execute(String prefix, String[] arguments) {
-            if(addon.getTimer().getState() == TimerState.RUNNING) {
-                displayMessage(
+            if(this.timer.getState() == TimerState.RUNNING) {
+                this.displayMessage(
                     Component.empty()
                         .append(SpeedrunTimerAddon.prefix())
                         .append(Component.translatable(
@@ -62,13 +64,13 @@ public class TimerCommand extends Command {
                 );
                 return true;
             }
-            if(addon.getTimer().getState() == TimerState.PAUSED) {
+            if(this.timer.getState() == TimerState.PAUSED) {
                 Laby.references().chatExecutor().chat("/timer resume", false);
                 return true;
             }
-            addon.getTimer().startCountUp();
+            this.timer.startCountUp();
 
-            displayMessage(
+            this.displayMessage(
                 Component.empty()
                     .append(SpeedrunTimerAddon.prefix())
                     .append(Component.translatable(
@@ -82,17 +84,17 @@ public class TimerCommand extends Command {
 
     private static class CountdownSubcommand extends SubCommand {
 
-        private final SpeedrunTimerAddon addon;
+        private final Timer timer;
 
-        protected CountdownSubcommand(SpeedrunTimerAddon addon) {
+        protected CountdownSubcommand(Timer timer) {
             super("countdown", "down");
-            this.addon = addon;
+            this.timer = timer;
         }
 
         @Override
         public boolean execute(String prefix, String[] arguments) {
-            if(addon.getTimer().getState() == TimerState.RUNNING) {
-                displayMessage(
+            if(this.timer.getState() == TimerState.RUNNING) {
+                this.displayMessage(
                     Component.empty()
                         .append(SpeedrunTimerAddon.prefix())
                         .append(Component.translatable(
@@ -103,13 +105,13 @@ public class TimerCommand extends Command {
                 );
                 return true;
             }
-            if(addon.getTimer().getState() == TimerState.PAUSED) {
+            if(this.timer.getState() == TimerState.PAUSED) {
                 Laby.references().chatExecutor().chat("/timer resume", false);
                 return true;
             }
 
             if(arguments.length < 1) {
-                displayMessage(
+                this.displayMessage(
                     Component.empty()
                         .append(SpeedrunTimerAddon.prefix())
                         .append(Component.translatable(
@@ -119,9 +121,9 @@ public class TimerCommand extends Command {
                 );
                 return true;
             }
-            long seconds = addon.getTimer().resolveSeconds(arguments[0]);
+            long seconds = this.timer.resolveSeconds(arguments[0]);
             if(seconds < 0) {
-                displayMessage(
+                this.displayMessage(
                     Component.empty()
                         .append(SpeedrunTimerAddon.prefix())
                         .append(Component.translatable(
@@ -132,8 +134,8 @@ public class TimerCommand extends Command {
                 return true;
             }
 
-            addon.getTimer().startCountDown(seconds);
-            displayMessage(
+            this.timer.startCountDown(seconds);
+            this.displayMessage(
                 Component.empty()
                     .append(SpeedrunTimerAddon.prefix())
                     .append(Component.translatable(
@@ -147,17 +149,17 @@ public class TimerCommand extends Command {
 
     private static class PauseSubcommand extends SubCommand {
 
-        private final SpeedrunTimerAddon addon;
+        private final Timer timer;
 
-        protected PauseSubcommand(SpeedrunTimerAddon addon) {
+        protected PauseSubcommand(Timer timer) {
             super("pause", "stop");
-            this.addon = addon;
+            this.timer = timer;
         }
 
         @Override
         public boolean execute(String prefix, String[] arguments) {
-            if(addon.getTimer().getState() == TimerState.OFF) {
-                displayMessage(
+            if(this.timer.getState() == TimerState.OFF) {
+                this.displayMessage(
                     Component.empty()
                         .append(SpeedrunTimerAddon.prefix())
                         .append(Component.translatable(
@@ -168,8 +170,8 @@ public class TimerCommand extends Command {
                 );
                 return true;
             }
-            if(addon.getTimer().getState() == TimerState.PAUSED) {
-                displayMessage(
+            if(this.timer.getState() == TimerState.PAUSED) {
+                this.displayMessage(
                     Component.empty()
                         .append(SpeedrunTimerAddon.prefix())
                         .append(Component.translatable(
@@ -180,8 +182,8 @@ public class TimerCommand extends Command {
                 );
                 return true;
             }
-            addon.getTimer().setState(TimerState.PAUSED);
-            displayMessage(
+            this.timer.setState(TimerState.PAUSED);
+            this.displayMessage(
                 Component.empty()
                     .append(SpeedrunTimerAddon.prefix())
                     .append(Component.translatable(
@@ -195,17 +197,17 @@ public class TimerCommand extends Command {
 
     private static class ResumeSubcommand extends SubCommand {
 
-        private final SpeedrunTimerAddon addon;
+        private final Timer timer;
 
-        protected ResumeSubcommand(SpeedrunTimerAddon addon) {
+        protected ResumeSubcommand(Timer timer) {
             super("resume");
-            this.addon = addon;
+            this.timer = timer;
         }
 
         @Override
         public boolean execute(String prefix, String[] arguments) {
-            if(addon.getTimer().getState() == TimerState.OFF) {
-                displayMessage(
+            if(this.timer.getState() == TimerState.OFF) {
+                this.displayMessage(
                     Component.empty()
                         .append(SpeedrunTimerAddon.prefix())
                         .append(Component.translatable(
@@ -216,8 +218,8 @@ public class TimerCommand extends Command {
                 );
                 return true;
             }
-            if(addon.getTimer().getState() != TimerState.PAUSED) {
-                displayMessage(
+            if(this.timer.getState() != TimerState.PAUSED) {
+                this.displayMessage(
                     Component.empty()
                         .append(SpeedrunTimerAddon.prefix())
                         .append(Component.translatable(
@@ -228,8 +230,8 @@ public class TimerCommand extends Command {
                 );
                 return true;
             }
-            if(addon.getTimer().getDirection() == TimerDirection.COUNT_DOWN && addon.getTimer().getSeconds() == 0) {
-                displayMessage(
+            if(this.timer.getDirection() == TimerDirection.COUNT_DOWN && this.timer.getSeconds() == 0) {
+                this.displayMessage(
                     Component.empty()
                         .append(SpeedrunTimerAddon.prefix())
                         .append(Component.translatable(
@@ -240,8 +242,8 @@ public class TimerCommand extends Command {
                 );
                 return true;
             }
-            addon.getTimer().setState(TimerState.RUNNING);
-            displayMessage(
+            this.timer.setState(TimerState.RUNNING);
+            this.displayMessage(
                 Component.empty()
                     .append(SpeedrunTimerAddon.prefix())
                     .append(Component.translatable(
@@ -255,17 +257,17 @@ public class TimerCommand extends Command {
 
     private static class TimeSubcommand extends SubCommand {
 
-        private final SpeedrunTimerAddon addon;
+        private final Timer timer;
 
-        protected TimeSubcommand(SpeedrunTimerAddon addon) {
+        protected TimeSubcommand(Timer timer) {
             super("time");
-            this.addon = addon;
+            this.timer = timer;
         }
 
         @Override
         public boolean execute(String prefix, String[] arguments) {
-            if(addon.getTimer().getState() == TimerState.OFF) {
-                displayMessage(
+            if(this.timer.getState() == TimerState.OFF) {
+                this.displayMessage(
                     Component.empty()
                         .append(SpeedrunTimerAddon.prefix())
                         .append(Component.translatable(
@@ -277,7 +279,7 @@ public class TimerCommand extends Command {
                 return true;
             }
             if(arguments.length < 1) {
-                displayMessage(
+                this.displayMessage(
                     Component.empty()
                         .append(SpeedrunTimerAddon.prefix())
                         .append(Component.translatable(
@@ -287,9 +289,9 @@ public class TimerCommand extends Command {
                 );
                 return true;
             }
-            long seconds = addon.getTimer().resolveSeconds(arguments[0]);
+            long seconds = this.timer.resolveSeconds(arguments[0]);
             if(seconds < 0) {
-                displayMessage(
+                this.displayMessage(
                     Component.empty()
                         .append(SpeedrunTimerAddon.prefix())
                         .append(Component.translatable(
@@ -300,8 +302,8 @@ public class TimerCommand extends Command {
                 return true;
             }
 
-            addon.getTimer().setSeconds(seconds);
-            displayMessage(
+            this.timer.setSeconds(seconds);
+            this.displayMessage(
                 Component.empty()
                     .append(SpeedrunTimerAddon.prefix())
                     .append(Component.translatable(
@@ -316,17 +318,17 @@ public class TimerCommand extends Command {
 
     private static class ResetSubcommand extends SubCommand {
 
-        private final SpeedrunTimerAddon addon;
+        private final Timer timer;
 
-        protected ResetSubcommand(SpeedrunTimerAddon addon) {
+        protected ResetSubcommand(Timer timer) {
             super("reset");
-            this.addon = addon;
+            this.timer = timer;
         }
 
         @Override
         public boolean execute(String prefix, String[] arguments) {
-            if(addon.getTimer().getState() == TimerState.OFF) {
-                displayMessage(
+            if(this.timer.getState() == TimerState.OFF) {
+                this.displayMessage(
                     Component.empty()
                         .append(SpeedrunTimerAddon.prefix())
                         .append(Component.translatable(
@@ -337,8 +339,8 @@ public class TimerCommand extends Command {
                 );
                 return true;
             }
-            addon.getTimer().reset();
-            displayMessage(
+            this.timer.reset();
+            this.displayMessage(
                 Component.empty()
                     .append(SpeedrunTimerAddon.prefix())
                     .append(Component.translatable(
