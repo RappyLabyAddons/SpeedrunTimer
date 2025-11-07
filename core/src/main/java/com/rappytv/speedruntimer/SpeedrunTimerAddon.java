@@ -1,10 +1,10 @@
 package com.rappytv.speedruntimer;
 
+import com.rappytv.speedruntimer.api.generated.ReferenceStorage;
 import com.rappytv.speedruntimer.command.TimerCommand;
-import com.rappytv.speedruntimer.core.generated.DefaultReferenceStorage;
-import com.rappytv.speedruntimer.hudWidget.TimerHudWidget;
+import com.rappytv.speedruntimer.hudwidget.TimerHudWidget;
 import com.rappytv.speedruntimer.sound.DefaultTimerSound;
-import com.rappytv.speedruntimer.sound.ITimerSound;
+import com.rappytv.speedruntimer.sound.TimerSound;
 import com.rappytv.speedruntimer.util.Timer;
 import net.labymod.api.Laby;
 import net.labymod.api.addon.LabyAddon;
@@ -29,17 +29,17 @@ public class SpeedrunTimerAddon extends LabyAddon<SpeedrunTimerConfig> {
     @SuppressWarnings("ConstantConditions")
     @Override
     protected void enable() {
-        ITimerSound timerSound = ((DefaultReferenceStorage) this.referenceStorageAccessor()).iTimerSound();
+        TimerSound timerSound = ((ReferenceStorage) this.referenceStorageAccessor()).getTimerSound();
         if(timerSound == null)
             timerSound = new DefaultTimerSound();
         ResourceLocation sound = timerSound.getNotificationSound();
-        timer = new Timer(() -> {
-            if(configuration().countdownSound().get()) {
+        this.timer = new Timer(() -> {
+            if(this.configuration().countdownSound().get()) {
                 Laby.references().minecraftSounds().playSound(sound, 1f, 1f);
             }
         });
-        registerSettingCategory();
-        registerCommand(new TimerCommand(this));
+        this.registerSettingCategory();
+        this.registerCommand(new TimerCommand(this));
         Laby.labyAPI().hudWidgetRegistry().register(new TimerHudWidget(this));
     }
 
@@ -50,7 +50,7 @@ public class SpeedrunTimerAddon extends LabyAddon<SpeedrunTimerConfig> {
 
     @NotNull
     public Timer getTimer() {
-        return timer;
+        return this.timer;
     }
 
     public static Component prefix() {

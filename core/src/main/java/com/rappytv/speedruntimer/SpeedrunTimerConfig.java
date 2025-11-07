@@ -19,10 +19,10 @@ public class SpeedrunTimerConfig extends AddonConfig {
 
     @Override
     public ConfigProperty<Boolean> enabled() {
-        return enabled;
+        return this.enabled;
     }
 
     public ConfigProperty<Boolean> countdownSound() {
-        return countdownSound;
+        return this.countdownSound;
     }
 }

@@ -19,21 +19,21 @@ public class Timer {
     }
 
     public void startCountUp() {
-        if(state != TimerState.OFF) return;
+        if(this.state != TimerState.OFF) return;
         this.direction = TimerDirection.COUNT_UP;
         this.seconds = 0;
-        start();
+        this.start();
     }
 
     public void startCountDown(long seconds) {
-        if(state != TimerState.OFF) return;
+        if(this.state != TimerState.OFF) return;
         this.direction = TimerDirection.COUNT_DOWN;
         this.seconds = seconds;
-        start();
+        this.start();
     }
 
     public void reset() {
-        if(state == TimerState.OFF) return;
+        if(this.state == TimerState.OFF) return;
         this.direction = TimerDirection.COUNT_UP;
         this.seconds = 0;
         this.state = TimerState.OFF;
@@ -51,7 +51,7 @@ public class Timer {
             (String.valueOf(seconds).length() > 1 ? "" : "0") + seconds
         ));
 
-        if(state == TimerState.PAUSED) component.decorate(TextDecoration.ITALIC).color(NamedTextColor.RED);
+        if(this.state == TimerState.PAUSED) component.decorate(TextDecoration.ITALIC).color(NamedTextColor.RED);
         else component.color(NamedTextColor.GREEN);
         return component.decorate(TextDecoration.BOLD);
     }
@@ -61,16 +61,16 @@ public class Timer {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if(state == TimerState.OFF) cancel();
-                if(state == TimerState.PAUSED) return;
+                if(Timer.this.state == TimerState.OFF) this.cancel();
+                if(Timer.this.state == TimerState.PAUSED) return;
 
-                if(direction == TimerDirection.COUNT_UP) seconds++;
-                else if(direction == TimerDirection.COUNT_DOWN) {
-                    seconds--;
-                    if(seconds < 0) {
-                        seconds = 0;
-                        state = TimerState.PAUSED;
-                        onCountdownComplete.run();
+                if(Timer.this.direction == TimerDirection.COUNT_UP) Timer.this.seconds++;
+                else if(Timer.this.direction == TimerDirection.COUNT_DOWN) {
+                    Timer.this.seconds--;
+                    if(Timer.this.seconds < 0) {
+                        Timer.this.seconds = 0;
+                        Timer.this.state = TimerState.PAUSED;
+                        Timer.this.onCountdownComplete.run();
                     }
                 }
             }
@@ -99,7 +99,7 @@ public class Timer {
             case "y" -> duration * 60 * 60 * 24 * 7 * 52;
             default -> {
                 try {
-                    yield resolveSeconds(Integer.parseInt(timeValue) + "s");
+                    yield this.resolveSeconds(Integer.parseInt(timeValue) + "s");
                 } catch (NumberFormatException e) {
                     yield -1;
                 }
@@ -108,7 +108,7 @@ public class Timer {
     }
 
     public TimerDirection getDirection() {
-        return direction;
+        return this.direction;
     }
 
     public void setDirection(TimerDirection direction) {
@@ -116,7 +116,7 @@ public class Timer {
     }
 
     public TimerState getState() {
-        return state;
+        return this.state;
     }
 
     public void setState(TimerState state) {
@@ -124,7 +124,7 @@ public class Timer {
     }
 
     public long getSeconds() {
-        return seconds;
+        return this.seconds;
     }
 
     public void setSeconds(long seconds) {
