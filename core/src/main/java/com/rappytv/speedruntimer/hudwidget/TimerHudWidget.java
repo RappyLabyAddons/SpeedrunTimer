@@ -1,4 +1,4 @@
-package com.rappytv.speedruntimer.hudWidget;
+package com.rappytv.speedruntimer.hudwidget;
 
 import com.rappytv.speedruntimer.SpeedrunTimerAddon;
 import com.rappytv.speedruntimer.util.Timer.TimerState;

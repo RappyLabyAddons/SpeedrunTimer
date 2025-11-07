@@ -2,7 +2,7 @@ package com.rappytv.speedruntimer;
 
 import com.rappytv.speedruntimer.api.generated.ReferenceStorage;
 import com.rappytv.speedruntimer.command.TimerCommand;
-import com.rappytv.speedruntimer.hudWidget.TimerHudWidget;
+import com.rappytv.speedruntimer.hudwidget.TimerHudWidget;
 import com.rappytv.speedruntimer.sound.DefaultTimerSound;
 import com.rappytv.speedruntimer.sound.TimerSound;
 import com.rappytv.speedruntimer.util.Timer;
