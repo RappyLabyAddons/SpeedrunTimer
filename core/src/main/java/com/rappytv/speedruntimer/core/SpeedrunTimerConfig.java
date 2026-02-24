@@ -1,4 +1,4 @@
-package com.rappytv.speedruntimer;
+package com.rappytv.speedruntimer.core;
 
 import net.labymod.api.addon.AddonConfig;
 import net.labymod.api.client.gui.screen.widget.widgets.input.SwitchWidget.SwitchSetting;

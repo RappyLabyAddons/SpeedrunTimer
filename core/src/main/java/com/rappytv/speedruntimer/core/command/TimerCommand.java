@@ -1,9 +1,9 @@
-package com.rappytv.speedruntimer.command;
+package com.rappytv.speedruntimer.core.command;
 
-import com.rappytv.speedruntimer.SpeedrunTimerAddon;
-import com.rappytv.speedruntimer.util.Timer;
-import com.rappytv.speedruntimer.util.Timer.TimerDirection;
-import com.rappytv.speedruntimer.util.Timer.TimerState;
+import com.rappytv.speedruntimer.core.SpeedrunTimerAddon;
+import com.rappytv.speedruntimer.api.Timer;
+import com.rappytv.speedruntimer.api.Timer.TimerDirection;
+import com.rappytv.speedruntimer.api.Timer.TimerState;
 import net.labymod.api.Laby;
 import net.labymod.api.client.chat.command.Command;
 import net.labymod.api.client.chat.command.SubCommand;

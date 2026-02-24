@@ -1,6 +1,6 @@
-package com.rappytv.speedruntimer.util;
+package com.rappytv.speedruntimer.api;
 
-import com.rappytv.speedruntimer.event.CountdownCompleteEvent;
+import com.rappytv.speedruntimer.api.event.CountdownCompleteEvent;
 import net.labymod.api.Laby;
 import net.labymod.api.client.component.Component;
 import net.labymod.api.client.component.format.NamedTextColor;

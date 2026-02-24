@@ -1,9 +1,9 @@
-package com.rappytv.speedruntimer;
+package com.rappytv.speedruntimer.core;
 
-import com.rappytv.speedruntimer.command.TimerCommand;
-import com.rappytv.speedruntimer.event.CountdownCompleteEvent;
-import com.rappytv.speedruntimer.hudwidget.TimerHudWidget;
-import com.rappytv.speedruntimer.util.Timer;
+import com.rappytv.speedruntimer.core.command.TimerCommand;
+import com.rappytv.speedruntimer.api.event.CountdownCompleteEvent;
+import com.rappytv.speedruntimer.core.hudwidget.TimerHudWidget;
+import com.rappytv.speedruntimer.api.Timer;
 import net.labymod.api.Laby;
 import net.labymod.api.addon.LabyAddon;
 import net.labymod.api.client.component.Component;
@@ -27,7 +27,6 @@ public class SpeedrunTimerAddon extends LabyAddon<SpeedrunTimerConfig> {
     private Timer timer;
     private ResourceLocation timerSound;
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public void enable() {
         this.timer = new Timer();

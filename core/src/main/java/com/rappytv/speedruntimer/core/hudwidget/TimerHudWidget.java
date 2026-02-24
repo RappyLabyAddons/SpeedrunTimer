@@ -1,7 +1,7 @@
-package com.rappytv.speedruntimer.hudwidget;
+package com.rappytv.speedruntimer.core.hudwidget;
 
-import com.rappytv.speedruntimer.SpeedrunTimerAddon;
-import com.rappytv.speedruntimer.util.Timer.TimerState;
+import com.rappytv.speedruntimer.core.SpeedrunTimerAddon;
+import com.rappytv.speedruntimer.api.Timer.TimerState;
 import net.labymod.api.client.gfx.pipeline.renderer.text.TextRenderingOptions;
 import net.labymod.api.client.gui.hud.HudWidgetRendererAccessor;
 import net.labymod.api.client.gui.hud.binding.dropzone.HudWidgetDropzone;

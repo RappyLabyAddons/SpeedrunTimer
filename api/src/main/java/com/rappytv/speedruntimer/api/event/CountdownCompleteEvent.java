@@ -1,4 +1,4 @@
-package com.rappytv.speedruntimer.event;
+package com.rappytv.speedruntimer.api.event;
 
 import net.labymod.api.event.Event;
 
