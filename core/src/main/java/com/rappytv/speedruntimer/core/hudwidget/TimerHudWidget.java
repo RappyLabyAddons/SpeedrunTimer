@@ -1,8 +1,8 @@
-package com.rappytv.speedruntimer.hudwidget;
+package com.rappytv.speedruntimer.core.hudwidget;
 
-import com.rappytv.speedruntimer.SpeedrunTimerAddon;
-import com.rappytv.speedruntimer.util.Timer.TimerState;
-import net.labymod.api.Laby;
+import com.rappytv.speedruntimer.core.SpeedrunTimerAddon;
+import com.rappytv.speedruntimer.api.Timer.TimerState;
+import net.labymod.api.client.gfx.pipeline.renderer.text.TextRenderingOptions;
 import net.labymod.api.client.gui.hud.HudWidgetRendererAccessor;
 import net.labymod.api.client.gui.hud.binding.dropzone.HudWidgetDropzone;
 import net.labymod.api.client.gui.hud.binding.dropzone.NamedHudWidgetDropzones;
@@ -12,21 +12,17 @@ import net.labymod.api.client.gui.hud.position.HudSize;
 import net.labymod.api.client.gui.hud.position.HudWidgetAnchor;
 import net.labymod.api.client.gui.icon.Icon;
 import net.labymod.api.client.gui.screen.ScreenContext;
-import net.labymod.api.client.render.font.ComponentRenderer;
 import net.labymod.api.client.render.font.RenderableComponent;
-import net.labymod.api.client.render.matrix.Stack;
 import net.labymod.api.client.resources.ResourceLocation;
 import net.labymod.api.util.bounds.area.RectangleAreaPosition;
 
 public class TimerHudWidget extends SimpleHudWidget<HudWidgetConfig> {
 
     private final SpeedrunTimerAddon addon;
-    private final ComponentRenderer renderer;
 
     public TimerHudWidget(SpeedrunTimerAddon addon) {
         super("speedruntimer_display", HudWidgetConfig.class);
         this.addon = addon;
-        this.renderer = Laby.references().renderPipeline().componentRenderer();
 
         this.bindDropzones(new TimerHudWidgetDropzone());
         this.setIcon(Icon.texture(ResourceLocation.create(
@@ -45,11 +41,16 @@ public class TimerHudWidget extends SimpleHudWidget<HudWidgetConfig> {
 
     @Override
     public void render(RenderPhase phase, ScreenContext context, boolean isEditorContext, HudSize size) {
-        Stack stack = context.stack();
         RenderableComponent statusComponent = RenderableComponent.of(this.addon.getTimer().getDisplay());
-        if (stack != null) {
-            this.renderer.builder().text(statusComponent).pos(this.anchor.isLeft() ? 2 : (this.anchor.isCenter() ? statusComponent.getWidth() / 2.0f : 2.0f), 0).color(-1).shadow(true).centered(this.anchor.isCenter()).render(stack);
-        }
+        context.canvas().submitRenderableComponent(
+            statusComponent,
+            this.anchor.isCenter() ? statusComponent.getWidth() / 2 : 0,
+            0,
+            -1,
+            TextRenderingOptions.SHADOW | (this.anchor.isCenter()
+                ? TextRenderingOptions.CENTERED
+                : TextRenderingOptions.NONE
+            ));
         size.set(statusComponent.getWidth(), statusComponent.getHeight());
     }
 

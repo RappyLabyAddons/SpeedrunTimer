@@ -1,17 +1,17 @@
-package com.rappytv.speedruntimer;
+package com.rappytv.speedruntimer.core;
 
-import com.rappytv.speedruntimer.api.generated.ReferenceStorage;
-import com.rappytv.speedruntimer.command.TimerCommand;
-import com.rappytv.speedruntimer.hudwidget.TimerHudWidget;
-import com.rappytv.speedruntimer.sound.DefaultTimerSound;
-import com.rappytv.speedruntimer.sound.TimerSound;
-import com.rappytv.speedruntimer.util.Timer;
+import com.rappytv.speedruntimer.core.command.TimerCommand;
+import com.rappytv.speedruntimer.api.event.CountdownCompleteEvent;
+import com.rappytv.speedruntimer.core.hudwidget.TimerHudWidget;
+import com.rappytv.speedruntimer.api.Timer;
 import net.labymod.api.Laby;
 import net.labymod.api.addon.LabyAddon;
 import net.labymod.api.client.component.Component;
 import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.client.component.format.TextDecoration;
 import net.labymod.api.client.resources.ResourceLocation;
+import net.labymod.api.event.Subscribe;
+import net.labymod.api.loader.MinecraftVersions;
 import net.labymod.api.models.addon.annotation.AddonMain;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,22 +25,27 @@ public class SpeedrunTimerAddon extends LabyAddon<SpeedrunTimerConfig> {
         .append(Component.space());
 
     private Timer timer;
+    private ResourceLocation timerSound;
 
-    @SuppressWarnings("ConstantConditions")
     @Override
-    protected void enable() {
-        TimerSound timerSound = ((ReferenceStorage) this.referenceStorageAccessor()).getTimerSound();
-        if(timerSound == null)
-            timerSound = new DefaultTimerSound();
-        ResourceLocation sound = timerSound.getNotificationSound();
-        this.timer = new Timer(() -> {
-            if(this.configuration().countdownSound().get()) {
-                Laby.references().minecraftSounds().playSound(sound, 1f, 1f);
-            }
-        });
+    public void enable() {
+        this.timer = new Timer();
+        this.initializeTimerSound();
         this.registerSettingCategory();
         this.registerCommand(new TimerCommand(this));
         Laby.labyAPI().hudWidgetRegistry().register(new TimerHudWidget(this));
+    }
+
+    @Subscribe
+    public void onCountDownComplete(CountdownCompleteEvent event) {
+        if(!this.configuration().countdownSound().get() || this.timerSound == null) {
+            return;
+        }
+        Laby.references().minecraftSounds().playSound(
+            this.timerSound,
+            1f,
+            1f
+        );
     }
 
     @Override
@@ -55,5 +60,17 @@ public class SpeedrunTimerAddon extends LabyAddon<SpeedrunTimerConfig> {
 
     public static Component prefix() {
         return prefix;
+    }
+
+    private void initializeTimerSound() {
+        String path;
+        if(MinecraftVersions.current().equals(MinecraftVersions.V1_8_9)) {
+            path = "note.pling";
+        } else if(MinecraftVersions.current().equals(MinecraftVersions.V1_12_2)) {
+            path = "block.note.pling";
+        } else {
+            path = "block.note_block.pling";
+        }
+        this.timerSound = ResourceLocation.create("minecraft", path);
     }
 }
