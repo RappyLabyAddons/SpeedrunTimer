@@ -134,7 +134,7 @@ public class TimerCommand extends Command {
                 return true;
             }
 
-            this.timer.startCountDown(seconds);
+            this.timer.startCountdown(seconds);
             this.displayMessage(
                 Component.empty()
                     .append(SpeedrunTimerAddon.prefix())

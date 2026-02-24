@@ -22,7 +22,7 @@ public class Timer {
         this.start();
     }
 
-    public void startCountDown(long seconds) {
+    public void startCountdown(long seconds) {
         if(this.state != TimerState.OFF) return;
         this.direction = TimerDirection.COUNT_DOWN;
         this.seconds = seconds;
